@@ -1,22 +1,34 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class CLI {
-    private static final String PREFIX = "명령어 > ";
-    private static final String[] EXIT_KEYWORDS = {"exit", "종료"};
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final String COMMAND_PREFIX = "명령어 > ";
 
-    public static void openWindow() {
-        while (true) {
-            System.out.print(PREFIX);
-            String input = scanner.nextLine();
+    private final Scanner scanner = new Scanner(System.in);
+    private boolean exitFlag = false;
 
-            if (Arrays.asList(EXIT_KEYWORDS).contains(input)){
-                System.out.println("프로그램이 종료됩니다.");
-                break;
-            } else {
-                System.out.println("존재하지 않는 명령어 입니다.");
+    public void openWindow() {
+        while (!exitFlag) {
+            System.out.print(COMMAND_PREFIX);
+            String command = scanner.nextLine();
+
+            try {
+                executeCommand(command);
+            } catch (NoSuchCommandException e) {
+                System.out.println(e.getMessage());
             }
+        }
+
+        System.out.println("프로그램이 종료됩니다.");
+    }
+
+    private void executeCommand(String command) {
+        switch (command) {
+            case "exit":
+            case "종료" :
+                exitFlag = true;
+                break;
+            default:
+                throw new NoSuchCommandException("존재하지 않는 명령어 입니다.");
         }
     }
 }
