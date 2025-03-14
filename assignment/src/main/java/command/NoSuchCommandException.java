@@ -1,3 +1,5 @@
+package command;
+
 public class NoSuchCommandException extends RuntimeException {
     public NoSuchCommandException() {
     }
