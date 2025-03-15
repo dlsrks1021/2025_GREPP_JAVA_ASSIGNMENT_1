@@ -45,6 +45,7 @@ public class CLI {
             case "조회" -> read();
             case "삭제" -> delete();
             case "수정" -> update();
+            case "목록" -> list();
             default ->
                 throw new NoSuchCommandException("존재하지 않는 명령어 입니다.");
         }
@@ -66,7 +67,7 @@ public class CLI {
         try {
             Long postId = scanner.nextLong();
             scanner.nextLine(); // Flush Buffer
-            System.out.println(postService.readPost(postId));
+            System.out.print(postService.readPost(postId));
         } catch (InputMismatchException e) {
             System.out.println("게시물 번호를 입력해주세요!");
         }
@@ -103,6 +104,10 @@ public class CLI {
         } catch (InputMismatchException e) {
             System.out.println("게시물 번호를 입력해주세요!");
         }
+    }
+
+    private void list(){
+        System.out.print(postService.readAllPost());
     }
 
 }

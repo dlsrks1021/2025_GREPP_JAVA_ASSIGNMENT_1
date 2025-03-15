@@ -1,6 +1,8 @@
 package post;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PostRepository {
@@ -8,6 +10,10 @@ public class PostRepository {
     private Long sequence = 0L;
 
     private final Map<Long, Post> posts = new HashMap<>();
+
+    public List<Post> findAll() {
+        return new ArrayList<>(posts.values());
+    }
 
     public Post find(Long postId) {
         if (!posts.containsKey(postId)) {
