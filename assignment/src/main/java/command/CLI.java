@@ -1,5 +1,6 @@
 package command;
 
+import post.NoSuchPostException;
 import post.PostRepository;
 import post.PostService;
 
@@ -29,6 +30,8 @@ public class CLI {
                 executeCommand(command);
             } catch (NoSuchCommandException e) {
                 System.out.println(e.getMessage());
+            } catch (NoSuchPostException e) {
+                System.out.println(e.getPostId() + "번 게시글은 존재하지 않습니다.");
             }
         }
 
@@ -82,12 +85,13 @@ public class CLI {
     }
 
     private void update() {
-        System.out.println("어떤 게시물을 수정할까요? > ");
+        System.out.print("어떤 게시물을 수정할까요? > ");
         try {
             Long postId = scanner.nextLong();
             scanner.nextLine(); // Flush Buffer
-            System.out.println(postId + "번 게시물을 수정합니다.");
+            postService.readPost(postId);
 
+            System.out.println(postId + "번 게시물을 수정합니다.");
             System.out.print("글의 제목을 입력하세요 > ");
             String postName = scanner.nextLine();
             System.out.print("글의 내용을 입력하세요 > ");
