@@ -4,6 +4,8 @@ import java.util.Stack;
 
 public class PostRepository {
 
+    private Long sequence = 0L;
+
     private final Stack<Post> posts = new Stack<>();
 
     public Post find() {
@@ -11,6 +13,7 @@ public class PostRepository {
     }
 
     public void save(Post post) {
+        post.setPostId(++sequence);
         posts.push(post);
     }
 
