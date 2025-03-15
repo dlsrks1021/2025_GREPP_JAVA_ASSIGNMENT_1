@@ -5,14 +5,11 @@ import lombok.Getter;
 @Getter
 public class NoSuchPostException extends RuntimeException{
 
-    private Long postId;
-
     public NoSuchPostException() {
     }
 
     public NoSuchPostException(Long postId) {
-        super(postId.toString());
-        this.postId = postId;
+        super(postId + "번 게시글은 존재하지 않습니다.");
     }
 
     public NoSuchPostException(String message) {

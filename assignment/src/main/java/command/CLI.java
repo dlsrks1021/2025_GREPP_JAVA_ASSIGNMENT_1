@@ -28,10 +28,8 @@ public class CLI {
 
             try {
                 executeCommand(command);
-            } catch (NoSuchCommandException e) {
+            } catch (NoSuchCommandException | NoSuchPostException e) {
                 System.out.println(e.getMessage());
-            } catch (NoSuchPostException e) {
-                System.out.println(e.getPostId() + "번 게시글은 존재하지 않습니다.");
             }
         }
 
