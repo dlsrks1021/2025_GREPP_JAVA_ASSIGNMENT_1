@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class Post {
+    private Long postId;
     private String postTitle;
     private String postContent;
 
