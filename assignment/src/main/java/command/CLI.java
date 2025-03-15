@@ -3,6 +3,7 @@ package command;
 import post.PostRepository;
 import post.PostService;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class CLI {
@@ -58,26 +59,46 @@ public class CLI {
     }
 
     private void read() {
-        System.out.println(postService.readPost());
+        System.out.print("어떤 게시물을 조회할까요? > ");
+        try {
+            Long postId = scanner.nextLong();
+            scanner.nextLine(); // Flush Buffer
+            System.out.println(postService.readPost(postId));
+        } catch (InputMismatchException e) {
+            System.out.println("게시물 번호를 입력해주세요!");
+        }
     }
 
     private void delete() {
-        postService.deletePost();
-        System.out.println("글이 삭제되었습니다!");
+        System.out.print("어떤 게시물을 삭제할까요? > ");
+        try {
+            Long postId = scanner.nextLong();
+            scanner.nextLine(); // Flush Buffer
+            postService.deletePost(postId);
+            System.out.println(postId + "번 게시물이 성공적으로 삭제되었습니다!");
+        } catch (InputMismatchException e) {
+            System.out.println("게시물 번호를 입력해주세요!");
+        }
     }
 
     private void update() {
-        System.out.println("아래 글을 수정합니다.");
-        read();
+        System.out.println("어떤 게시물을 수정할까요? > ");
+        try {
+            Long postId = scanner.nextLong();
+            scanner.nextLine(); // Flush Buffer
+            System.out.println(postId + "번 게시물을 수정합니다.");
 
-        System.out.print("글의 제목을 입력하세요 > ");
-        String postName = scanner.nextLine();
-        System.out.print("글의 내용을 입력하세요 > ");
-        String postContent = scanner.nextLine();
+            System.out.print("글의 제목을 입력하세요 > ");
+            String postName = scanner.nextLine();
+            System.out.print("글의 내용을 입력하세요 > ");
+            String postContent = scanner.nextLine();
 
-        postService.editPost(postName, postContent);
+            postService.editPost(postId, postName, postContent);
 
-        System.out.println("글을 수정했습니다!");
+            System.out.println(postId + "번 게시물이 성공적으로 수정되었습니다!");
+        } catch (InputMismatchException e) {
+            System.out.println("게시물 번호를 입력해주세요!");
+        }
     }
 
 }
