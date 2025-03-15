@@ -11,21 +11,23 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public String readPost() {
-        Post post = postRepository.find();
+    public String readPost(Long postId) {
+        Post post = postRepository.find(postId);
         String result = "";
+        result += postId + "번 게시물\n";
         result += "제목 : " + post.getPostTitle() + "\n";
         result += "내용 : " + post.getPostContent();
 
         return result;
     }
 
-    public void deletePost() {
-        postRepository.delete();
+    public void deletePost(Long postId) {
+        postRepository.delete(postId);
     }
 
-    public void editPost(String postTitle, String postContent) {
+    public void editPost(Long postId, String postTitle, String postContent) {
         Post post = new Post(postTitle, postContent);
+        post.setPostId(postId);
         postRepository.update(post);
     }
 }
