@@ -1,6 +1,6 @@
 package command;
 
-public class NoSuchCommandException extends RuntimeException {
+public class NoSuchCommandException extends Exception {
     public NoSuchCommandException() {
     }
 

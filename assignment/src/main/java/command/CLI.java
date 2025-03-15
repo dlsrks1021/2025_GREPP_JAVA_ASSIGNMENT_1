@@ -35,7 +35,7 @@ public class CLI {
         System.out.println("프로그램이 종료됩니다.");
     }
 
-    private void executeCommand(String command) {
+    private void executeCommand(String command) throws NoSuchCommandException {
         switch (command) {
             case "exit", "종료" -> exitFlag = true;
             case "작성" -> write();
