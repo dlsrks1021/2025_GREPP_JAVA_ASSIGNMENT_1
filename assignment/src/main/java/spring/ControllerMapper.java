@@ -34,12 +34,22 @@ public class ControllerMapper {
 
     private Object[] getParamValues(Method method, URL parsedUrl) {
         Parameter[] parameters = method.getParameters();
-        List<String> paramValues = new ArrayList<>();
+        List<Object> paramValues = new ArrayList<>();
         for (Parameter parameter : parameters) {
             RequestParam requestParam = parameter.getAnnotation(RequestParam.class);
-            paramValues.add(parsedUrl.params.get(requestParam.value()));
+            String userParam = parsedUrl.params.get(requestParam.value());
+            Object convertedParam = typeConvert(parameter.getType(), userParam);
+            paramValues.add(convertedParam);
         }
         return paramValues.toArray();
+    }
+
+    private Object typeConvert(Class<?> clazz, String value) {
+        if (clazz == Long.class || clazz == long.class) {
+            return Long.parseLong(value);
+        } else {
+            return value;
+        }
     }
 
     private MethodInfo getMethodInfoForUrl(URL url) throws MalformedURLException {
