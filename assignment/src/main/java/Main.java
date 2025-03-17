@@ -1,8 +1,8 @@
-import command.CLI;
+import spring.SpringBootApplication;
 
 public class Main {
     public static void main(String[] args) {
-        CLI cli = new CLI();
-        cli.openWindow();
+        SpringBootApplication application = new SpringBootApplication();
+        application.run();
     }
 }
