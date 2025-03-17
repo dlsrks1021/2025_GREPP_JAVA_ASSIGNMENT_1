@@ -1,10 +1,13 @@
 package post;
 
+import spring.annotation.Repository;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class PostRepository {
 
     private Long sequence = 0L;

@@ -1,9 +1,11 @@
 package post;
 
 import lombok.RequiredArgsConstructor;
+import spring.annotation.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
