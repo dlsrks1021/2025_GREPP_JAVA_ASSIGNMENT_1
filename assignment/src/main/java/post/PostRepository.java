@@ -12,33 +12,33 @@ public class PostRepository {
 
     private Long sequence = 0L;
 
-    private final Map<Long, Post> posts = new HashMap<>();
+    private final Map<Long, Post> postMap = new HashMap<>();
 
     public List<Post> findAll() {
-        return new ArrayList<>(posts.values());
+        return new ArrayList<>(postMap.values());
     }
 
     public Post find(Long postId) {
-        if (!posts.containsKey(postId)) {
+        if (!postMap.containsKey(postId)) {
             throw new NoSuchPostException(postId);
         }
-        return posts.get(postId);
+        return postMap.get(postId);
     }
 
     public void save(Post post) {
         post.setPostId(++sequence);
-        posts.put(post.getPostId(), post);
+        postMap.put(post.getPostId(), post);
     }
 
     public void delete(Long postId) {
-        if (!posts.containsKey(postId)) {
+        if (!postMap.containsKey(postId)) {
             throw new NoSuchPostException(postId);
         }
-        posts.remove(postId);
+        postMap.remove(postId);
     }
 
     public void update(Post newPost) {
-        Post oldPost = posts.get(newPost.getPostId());
+        Post oldPost = postMap.get(newPost.getPostId());
         if (oldPost == null) {
             throw new NoSuchPostException(newPost.getPostId());
         }
