@@ -1,5 +1,8 @@
 package spring;
 
+import board.NoSuchBoardException;
+import post.NoSuchPostException;
+
 import java.net.MalformedURLException;
 import java.util.Scanner;
 
@@ -24,7 +27,7 @@ public class CLI {
 
             try {
                 executeCommand(command);
-            } catch (MalformedURLException e) {
+            } catch (MalformedURLException | NoSuchBoardException | NoSuchPostException e) {
                 System.out.println(e.getMessage());
             }
         }

@@ -1,13 +1,16 @@
 package spring;
 
+import board.NoSuchBoardException;
 import lombok.RequiredArgsConstructor;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
+import post.NoSuchPostException;
 import spring.annotation.Controller;
 import spring.annotation.GetMapping;
 import spring.annotation.RequestParam;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.MalformedURLException;
@@ -27,6 +30,14 @@ public class ControllerMapper {
         try {
             Object bean = beanFactory.getBean(methodInfo.clazz.getName());
             method.invoke(bean, paramValues);
+        } catch (NoSuchPostException | NoSuchBoardException | InvocationTargetException e){
+            if (e.getCause() instanceof NoSuchPostException){
+                throw (NoSuchPostException) e.getCause();
+            } else if (e.getCause() instanceof NoSuchBoardException){
+                throw (NoSuchBoardException) e.getCause();
+            }
+
+            throw new MalformedURLException(e.getCause().getMessage());
         } catch (Exception e) {
             throw new MalformedURLException(e.getMessage());
         }
@@ -38,6 +49,9 @@ public class ControllerMapper {
         for (Parameter parameter : parameters) {
             RequestParam requestParam = parameter.getAnnotation(RequestParam.class);
             String userParam = parsedUrl.params.get(requestParam.value());
+            if (userParam == null) {
+                continue;
+            }
             Object convertedParam = typeConvert(parameter.getType(), userParam);
             paramValues.add(convertedParam);
         }
@@ -47,9 +61,9 @@ public class ControllerMapper {
     private Object typeConvert(Class<?> clazz, String value) {
         if (clazz == Long.class || clazz == long.class) {
             return Long.parseLong(value);
-        } else {
-            return value;
         }
+
+        return value;
     }
 
     private MethodInfo getMethodInfoForUrl(URL url) throws MalformedURLException {
