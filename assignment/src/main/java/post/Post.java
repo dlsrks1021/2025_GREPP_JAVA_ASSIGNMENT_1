@@ -9,11 +9,14 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class Post {
     private Long postId;
+    private Long boardId;
     private String postTitle;
     private String postContent;
     private Timestamp postTime;
+    private Timestamp editedTime;
 
-    public Post(String postTitle, String postContent) {
+    public Post(Long boardId, String postTitle, String postContent) {
+        this.boardId = boardId;
         this.postTitle = postTitle;
         this.postContent = postContent;
         this.postTime = Timestamp.valueOf(LocalDateTime.now());
