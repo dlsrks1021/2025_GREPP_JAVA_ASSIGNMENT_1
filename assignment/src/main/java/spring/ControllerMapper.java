@@ -22,13 +22,13 @@ public class ControllerMapper {
     private final BeanFactory beanFactory;
 
     public void call(String url) throws MalformedURLException {
-        URL parsedUrl = parseUrl(url);
-        MethodInfo methodInfo = getMethodInfoForUrl(parsedUrl);
-        Method method = methodInfo.method;
-        Object[] paramValues = getParamValues(method, parsedUrl);
-
         try {
+            URL parsedUrl = parseUrl(url);
+            MethodInfo methodInfo = getMethodInfoForUrl(parsedUrl);
+            Method method = methodInfo.method;
+            Object[] paramValues = getParamValues(method, parsedUrl);
             Object bean = beanFactory.getBean(methodInfo.clazz.getName());
+
             method.invoke(bean, paramValues);
         } catch (NoSuchPostException | NoSuchBoardException | InvocationTargetException e){
             if (e.getCause() instanceof NoSuchPostException){
@@ -60,7 +60,11 @@ public class ControllerMapper {
 
     private Object typeConvert(Class<?> clazz, String value) {
         if (clazz == Long.class || clazz == long.class) {
-            return Long.parseLong(value);
+            try {
+                return Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                throw new NumberFormatException("파라미터 형식이 잘못되었습니다 : " + value);
+            }
         }
 
         return value;
@@ -99,7 +103,7 @@ public class ControllerMapper {
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new MalformedURLException(url);
+            throw new MalformedURLException(url + " not found");
         }
 
         return new URL(path, params);

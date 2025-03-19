@@ -18,31 +18,27 @@ public class PostRepository {
         return new ArrayList<>(postMap.values());
     }
 
-    public Post find(Long postId) {
-        if (!postMap.containsKey(postId)) {
-            throw new NoSuchPostException(postId);
-        }
+    public Post findById(Long postId) {
         return postMap.get(postId);
     }
 
-    public void save(Post post) {
+    public Post save(Post post) {
         post.setPostId(++sequence);
         postMap.put(post.getPostId(), post);
+        return post;
     }
 
-    public void delete(Long postId) {
-        if (!postMap.containsKey(postId)) {
-            throw new NoSuchPostException(postId);
-        }
-        postMap.remove(postId);
+    public Post delete(Long postId) {
+        return postMap.remove(postId);
     }
 
     public void update(Post newPost) {
-        Post oldPost = postMap.get(newPost.getPostId());
-        if (oldPost == null) {
+        Post post = postMap.get(newPost.getPostId());
+        if (post == null) {
             throw new NoSuchPostException(newPost.getPostId());
         }
-        oldPost.setPostTitle(newPost.getPostTitle());
-        oldPost.setPostContent(newPost.getPostContent());
+        post.setPostTitle(newPost.getPostTitle());
+        post.setPostContent(newPost.getPostContent());
+        post.setEditedTime(newPost.getPostTime());
     }
 }
