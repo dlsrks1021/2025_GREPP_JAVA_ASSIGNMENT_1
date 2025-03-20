@@ -11,8 +11,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final PostRepository postRepository;
 
-    public void createBoard(String boardName) {
+    public void createBoard(String boardName, String author) {
         Board board = new Board(boardName);
+        board.setAuthor(author);
         boardRepository.save(board);
     }
 
@@ -20,7 +21,7 @@ public class BoardService {
         Board board = boardRepository.findByName(boardName);
 
         StringBuilder boardInfo = new StringBuilder();
-        boardInfo.append("[" + board.getBoardId() + "][" + board.getBoardName() + " 게시판]\n");
+        boardInfo.append("[" + board.getBoardId() + "][" + board.getBoardName() + " 게시판] 생성자: " + board.getAuthor() + "\n");
         postRepository.findAll().stream()
                 .filter(p -> p.getBoardId().equals(board.getBoardId()))
                 .forEach(boardInfo::append);

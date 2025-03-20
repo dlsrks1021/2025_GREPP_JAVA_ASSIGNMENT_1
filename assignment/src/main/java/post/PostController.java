@@ -3,7 +3,7 @@ package post;
 import board.BoardService;
 import board.NoSuchBoardException;
 import lombok.RequiredArgsConstructor;
-import spring.CLI;
+import cli.CLI;
 import spring.annotation.Controller;
 import spring.annotation.GetMapping;
 import spring.annotation.RequestParam;
@@ -22,8 +22,9 @@ public class PostController {
         }
         String postTitle = CLI.getUserInput("새로운 게시물을 작성합니다.\n제목을 입력하세요 > ");
         String postContent = CLI.getUserInput("내용을 입력하세요 > ");
-
-        postService.writePost(boardId, postTitle, postContent);
+        String author = CLI.getSession().isUserLoggedIn() ?
+                CLI.getSession().getAccount().getAccountName() : "비회원";
+        postService.writePost(boardId, postTitle, postContent, author);
     }
 
     @GetMapping("/posts/remove")

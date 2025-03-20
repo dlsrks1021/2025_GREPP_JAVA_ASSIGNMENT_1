@@ -14,6 +14,7 @@ public class Post {
     private String postContent;
     private Timestamp postTime;
     private Timestamp editedTime;
+    private String author;
 
     public Post(Long boardId, String postTitle, String postContent) {
         this.boardId = boardId;

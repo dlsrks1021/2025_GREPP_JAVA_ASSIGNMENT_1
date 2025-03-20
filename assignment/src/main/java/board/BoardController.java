@@ -1,7 +1,7 @@
 package board;
 
 import lombok.RequiredArgsConstructor;
-import spring.CLI;
+import cli.CLI;
 import spring.annotation.Controller;
 import spring.annotation.GetMapping;
 import spring.annotation.RequestParam;
@@ -15,7 +15,9 @@ public class BoardController {
     @GetMapping("/boards/add")
     public void add() {
         String boardName = CLI.getUserInput("새로운 게시판 이름을 입력해주세요 > ");
-        boardService.createBoard(boardName);
+        String author = CLI.getSession().isUserLoggedIn() ?
+                CLI.getSession().getAccount().getAccountName() : "비회원";
+        boardService.createBoard(boardName, author);
         CLI.printPrompt("게시판이 작성되었습니다.");
     }
 
