@@ -8,8 +8,9 @@ import spring.annotation.Service;
 public class PostService {
     private final PostRepository postRepository;
 
-    public Post writePost(long boardId, String postTitle, String postContent) {
+    public Post writePost(long boardId, String postTitle, String postContent, String author) {
         Post post = new Post(boardId, postTitle, postContent);
+        post.setAuthor(author);
         return postRepository.save(post);
     }
 
@@ -20,10 +21,12 @@ public class PostService {
         }
         String result = "";
         result += "[" + postId + "]번 게시글"
-                + "\n작성일 : " + post.getPostTime()
-                + "\n수정일 : " + post.getEditedTime()
-                + "\n제목 : " + post.getPostTitle()
-                + "\n내용 : " + post.getPostContent() + "\n";
+                + "\n작성일 : " + post.getPostTime();
+        result += post.getEditedTime() == null?
+                    "" : "\n수정일 : " + post.getEditedTime();
+        result += "\n제목 : " + post.getPostTitle()
+                + "\n내용 : " + post.getPostContent()
+                + "\n작성자 : " + post.getAuthor() + "\n";
 
         return result;
     }
