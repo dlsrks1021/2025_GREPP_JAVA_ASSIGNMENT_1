@@ -1,8 +1,8 @@
-import spring.SpringBootApplication;
+import framework.Application;
 
 public class Main {
     public static void main(String[] args) {
-        SpringBootApplication application = new SpringBootApplication();
+        Application application = new Application();
         application.run();
     }
 }
