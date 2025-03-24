@@ -1,6 +1,7 @@
 package controller;
 
 import exception.AccountException;
+import exception.NoValidGradeForUrlException;
 import framework.Session;
 import framework.annotation.GradeFilter;
 import model.Grade;
@@ -90,8 +91,14 @@ public class AccountController {
     @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/accounts/remove")
     public void remove(@RequestParam("accountId") long accountId, Session session) {
-        Account deletedAccount = accountService.deleteAccount(accountId);
         Long userId = (Long) session.getAttribute("userId");
+        if (session.getAttribute("grade").equals(Grade.GENERAL)) {
+            if (userId != accountId) {
+                throw new AccountException("본인의 계정만 삭제가 가능합니다.");
+            }
+        }
+        Account deletedAccount = accountService.deleteAccount(accountId);
+
         if (userId != null && deletedAccount.getAccountId() == userId) {
             session.invalidate();
             System.out.println("로그아웃 되었습니다.");
