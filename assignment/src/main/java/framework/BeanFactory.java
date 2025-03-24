@@ -19,6 +19,8 @@ public class BeanFactory {
         Reflections reflections = new Reflections(new ConfigurationBuilder().forPackages(""));
         componentClasses = reflections.get(
                 Scanners.TypesAnnotated.with(ComponentScan.class).asClass());
+
+        createDefaultBean();
         for (Class<?> componentClass : componentClasses) {
             if (componentClass.isAnnotation()){
                 continue;
@@ -29,6 +31,11 @@ public class BeanFactory {
 
     public Object getBean(String beanName) {
         return beanMap.get(beanName);
+    }
+
+    private void createDefaultBean() {
+        Scanner scanner = new Scanner(System.in);
+        beanMap.put(scanner.getClass().getName(), scanner);
     }
 
     private Object createBean(String name) {

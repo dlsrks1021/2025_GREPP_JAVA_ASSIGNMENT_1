@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class BoardController {
 
     private final BoardService boardService;
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
     @GetMapping("/boards/add")
     public void add(Session session) {
         System.out.println("새로운 게시판 이름을 입력해주세요 > ");

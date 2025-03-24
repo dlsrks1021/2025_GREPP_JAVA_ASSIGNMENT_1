@@ -19,7 +19,7 @@ public class PostController {
 
     private final PostService postService;
     private final BoardService boardService;
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
     @GetMapping("/posts/add")
     public void add(@RequestParam("boardId") long boardId, Session session) {

@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class AccountController {
 
     private final AccountService accountService;
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
     @GetMapping("/accounts/signup")
     public void signup() {
