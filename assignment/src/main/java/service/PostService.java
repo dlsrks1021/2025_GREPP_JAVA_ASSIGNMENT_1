@@ -17,6 +17,14 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public Post getPost(long postId) {
+        Post post = postRepository.findById(postId);
+        if (post == null) {
+            throw new NoSuchPostException(postId);
+        }
+        return post;
+    }
+
     public String readPost(Long postId) {
         Post post = postRepository.findById(postId);
         if (post == null) {

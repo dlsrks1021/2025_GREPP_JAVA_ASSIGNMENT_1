@@ -1,5 +1,7 @@
 package controller;
 
+import exception.AccountException;
+import exception.NoValidGradeForUrlException;
 import framework.Session;
 import framework.annotation.GradeFilter;
 import model.Grade;
@@ -42,16 +44,30 @@ public class PostController {
 
     @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/posts/remove")
-    public void remove(@RequestParam("postId") long postId) {
+    public void remove(@RequestParam("postId") long postId, Session session) {
+        if (session.getAttribute("grade").equals(Grade.GENERAL)) {
+            String userName = (String) session.getAttribute("userName");
+            Post post = postService.getPost(postId);
+            if (!post.getAuthor().equals(userName)) {
+                throw new AccountException("게시글 작성자가 아닙니다.");
+            }
+        }
         Post deletedPost = postService.deletePost(postId);
         System.out.println(deletedPost.getPostTitle() + " 게시글이 삭제되었습니다.");
     }
 
     @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/posts/edit")
-    public void edit(@RequestParam("postId") long postId) {
+    public void edit(@RequestParam("postId") long postId, Session session) {
         if (!postService.isPostExist(postId)) {
             throw new NoSuchPostException(postId);
+        }
+        if (session.getAttribute("grade").equals(Grade.GENERAL)) {
+            String userName = (String) session.getAttribute("userName");
+            Post post = postService.getPost(postId);
+            if (!post.getAuthor().equals(userName)) {
+                throw new AccountException("게시글 작성자가 아닙니다.");
+            }
         }
 
         System.out.println("게시글을 수정합니다.");
