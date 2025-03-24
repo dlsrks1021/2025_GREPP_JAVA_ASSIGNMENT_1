@@ -15,7 +15,8 @@ public class AccountRepository {
     private Long sequence = 0L;
     private Map<Long, Account> accountMap = new HashMap<>();
 
-    public Account save(Account account) {
+    public Account save(String name, String email, String password) {
+        Account account = new Account(name, email, password);
         account.setAccountId(++sequence);
         return accountMap.put(account.getAccountId(), account);
     }

@@ -1,18 +1,20 @@
 package framework;
 
-import model.Account;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.HashMap;
+import java.util.Map;
 
-@Getter @Setter
 public class Session {
-    private Account account;
+    private Map<String, Object> attributes = new HashMap<>();
 
-    public boolean isUserLoggedIn() {
-        return account != null;
+    public void setAttribute(String key, Object value) {
+        attributes.put(key, value);
     }
 
-    public void signout() {
-        account = null;
+    public Object getAttribute(String key) {
+        return attributes.get(key);
+    }
+
+    public void invalidate() {
+        attributes.clear();
     }
 }

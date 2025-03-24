@@ -12,23 +12,14 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public Account signup(Account account) {
-        return accountRepository.save(account);
+    public Account signup(String name, String email, String password) {
+        return accountRepository.save(name, email, password);
     }
 
     public Account login(String name, String password) {
         return accountRepository.findByName(name)
                 .filter(a -> a.getAccountPassword().equals(password))
                 .orElseThrow(() -> new AccountException("로그인에 실패했습니다."));
-    }
-
-    public String readAccount(long accountId) {
-        Account account = accountRepository.findById(accountId);
-        if (account == null) {
-            throw new AccountException(accountId + "번 계정이 존재하지 않습니다.");
-        }
-
-        return account.toString();
     }
 
     public Account getAccount(long accountId) {

@@ -21,12 +21,11 @@ public class ControllerMapper {
 
     private final BeanFactory beanFactory;
 
-    public void call(String url) throws MalformedURLException {
+    public void call(Request request) throws MalformedURLException {
         try {
-            URL parsedUrl = parseUrl(url);
-            MethodInfo methodInfo = getMethodInfoForUrl(parsedUrl);
+            MethodInfo methodInfo = getMethodInfoForUrl(request.getRequestURL());
             Method method = methodInfo.method;
-            Object[] paramValues = getParamValues(method, parsedUrl);
+            Object[] paramValues = getParamValues(method, request);
             Object bean = beanFactory.getBean(methodInfo.clazz.getName());
 
             method.invoke(bean, paramValues);
@@ -43,15 +42,16 @@ public class ControllerMapper {
         }
     }
 
-    private Object[] getParamValues(Method method, URL parsedUrl) {
+    private Object[] getParamValues(Method method, Request request) {
         Parameter[] parameters = method.getParameters();
         List<Object> paramValues = new ArrayList<>();
         for (Parameter parameter : parameters) {
-            RequestParam requestParam = parameter.getAnnotation(RequestParam.class);
-            String userParam = parsedUrl.params.get(requestParam.value());
-            if (userParam == null) {
+            if (parameter.getType() == Session.class){
+                paramValues.add(request.getSession());
                 continue;
             }
+            RequestParam requestParam = parameter.getAnnotation(RequestParam.class);
+            String userParam = request.getRequestURL().getParams().get(requestParam.value());
             Object convertedParam = typeConvert(parameter.getType(), userParam);
             paramValues.add(convertedParam);
         }
@@ -80,39 +80,13 @@ public class ControllerMapper {
             Method[] methods = controllerClass.getMethods();
             for (Method method : methods) {
                 GetMapping annotation = method.getAnnotation(GetMapping.class);
-                if (annotation != null && annotation.value().equals(url.path)) {
+                if (annotation != null && annotation.value().equals(url.getTarget())) {
                     return new MethodInfo(controllerClass, method);
                 }
             }
         }
 
-        throw new MalformedURLException(url.path + " not found");
-    }
-
-    private URL parseUrl(String url) throws MalformedURLException {
-        Map<String, String> params = new HashMap<>();
-        String path = null;
-
-        try {
-            String[] tokens = url.split("[?=]");
-            for (int i = 0; i < tokens.length; i++) {
-                if (i == 0) {
-                    path = tokens[i];
-                } else {
-                    params.put(tokens[i], tokens[++i]);
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new MalformedURLException(url + " not found");
-        }
-
-        return new URL(path, params);
-    }
-
-    @RequiredArgsConstructor
-    static class URL {
-        private final String path;
-        private final Map<String, String> params;
+        throw new MalformedURLException(url.getTarget() + " not found");
     }
 
     @RequiredArgsConstructor
