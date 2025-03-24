@@ -1,7 +1,10 @@
 package framework;
 
 import exception.NoSuchBoardException;
+import exception.NoValidGradeForUrlException;
+import framework.annotation.GradeFilter;
 import lombok.RequiredArgsConstructor;
+import model.Grade;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
@@ -25,6 +28,9 @@ public class ControllerMapper {
         try {
             MethodInfo methodInfo = getMethodInfoForUrl(request.getRequestURL());
             Method method = methodInfo.method;
+            if (!isValidGradeForUrl(request, method)) {
+                throw new NoValidGradeForUrlException("잘못된 접근입니다.");
+            }
             Object[] paramValues = getParamValues(method, request);
             Object bean = beanFactory.getBean(methodInfo.clazz.getName());
 
@@ -40,6 +46,18 @@ public class ControllerMapper {
         } catch (Exception e) {
             throw new MalformedURLException(e.getMessage());
         }
+    }
+
+    private boolean isValidGradeForUrl(Request request, Method method) {
+        GradeFilter gradeFilter = method.getAnnotation(GradeFilter.class);
+        if (gradeFilter == null) {
+            return true;
+        }
+
+        Grade[] filteredGrades = gradeFilter.value();
+        Grade sessionGrade = (Grade) request.getSession().getAttribute("grade");
+
+        return Arrays.asList(filteredGrades).contains(sessionGrade);
     }
 
     private Object[] getParamValues(Method method, Request request) {

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class Account {
     private long accountId;
+    private Grade accountGrade;
     private String accountName;
     private String accountEmail;
     private String accountPassword;
@@ -16,10 +17,19 @@ public class Account {
     private Timestamp accountModifyTime;
 
     public Account(String name, String email, String password) {
+        this.accountGrade = Grade.GENERAL;
         this.accountName = name;
         this.accountEmail = email;
         this.accountPassword = password;
         this.accountRegisterTime = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    public void setAdmin() {
+        this.accountGrade = Grade.ADMIN;
+    }
+
+    public boolean isAdmin() {
+        return this.accountGrade == Grade.ADMIN;
     }
 
     @Override
