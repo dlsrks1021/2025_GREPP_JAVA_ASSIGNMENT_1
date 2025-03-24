@@ -18,6 +18,9 @@ public class AccountRepository {
     public Account save(String name, String email, String password) {
         Account account = new Account(name, email, password);
         account.setAccountId(++sequence);
+        if (name.equals("admin")) {
+            account.setAdmin();
+        }
         return accountMap.put(account.getAccountId(), account);
     }
 

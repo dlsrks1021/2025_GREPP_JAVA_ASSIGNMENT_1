@@ -2,6 +2,8 @@ package controller;
 
 import exception.AccountException;
 import framework.Session;
+import framework.annotation.GradeFilter;
+import model.Grade;
 import service.AccountService;
 import lombok.RequiredArgsConstructor;
 import model.Account;
@@ -18,6 +20,7 @@ public class AccountController {
     private final AccountService accountService;
     private final Scanner scanner;
 
+    @GradeFilter(Grade.ANONYMOUS)
     @GetMapping("/accounts/signup")
     public void signup() {
         System.out.println("회원 가입을 시작합니다.");
@@ -34,6 +37,7 @@ public class AccountController {
         }
     }
 
+    @GradeFilter(Grade.ANONYMOUS)
     @GetMapping("/accounts/signin")
     public void signin(Session session) {
         if (session.getAttribute("userId") != null) {
@@ -48,9 +52,11 @@ public class AccountController {
         Account loginAccount = accountService.login(name, password);
         session.setAttribute("userId", loginAccount.getAccountId());
         session.setAttribute("userName", loginAccount.getAccountName());
+        session.setAttribute("grade", loginAccount.getAccountGrade());
         System.out.println(loginAccount.getAccountName() + "님 환영합니다.");
     }
 
+    @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/accounts/signout")
     public void signout(Session session) {
         if (session.getAttribute("userId") == null) {
@@ -66,6 +72,7 @@ public class AccountController {
         System.out.println(accountService.getAccount(accountId).toString());
     }
 
+    @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/accounts/edit")
     public void edit(@RequestParam("accountId") long accountId) {
         Account account = accountService.getAccount(accountId);
@@ -80,6 +87,7 @@ public class AccountController {
         System.out.println(updatedAccount.getAccountName() + " 계정이 수정되었습니다.");
     }
 
+    @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/accounts/remove")
     public void remove(@RequestParam("accountId") long accountId, Session session) {
         Account deletedAccount = accountService.deleteAccount(accountId);

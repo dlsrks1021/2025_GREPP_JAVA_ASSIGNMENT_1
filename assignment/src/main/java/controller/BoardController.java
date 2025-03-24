@@ -1,6 +1,8 @@
 package controller;
 
 import framework.Session;
+import framework.annotation.GradeFilter;
+import model.Grade;
 import service.BoardService;
 import exception.NoSuchBoardException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ public class BoardController {
 
     private final BoardService boardService;
     private final Scanner scanner;
+
+    @GradeFilter(Grade.ADMIN)
     @GetMapping("/boards/add")
     public void add(Session session) {
         System.out.println("새로운 게시판 이름을 입력해주세요 > ");
@@ -27,6 +31,7 @@ public class BoardController {
         System.out.println("게시판이 작성되었습니다.");
     }
 
+    @GradeFilter(Grade.ADMIN)
     @GetMapping("/boards/edit")
     public void edit(@RequestParam("boardId") long boardId) {
         if (!boardService.isBoardExist(boardId)) {
@@ -39,6 +44,7 @@ public class BoardController {
         System.out.println("게시판이 수정되었습니다.");
     }
 
+    @GradeFilter(Grade.ADMIN)
     @GetMapping("/boards/remove")
     public void remove(@RequestParam("boardId") long boardId) {
         Board board = boardService.deleteBoard(boardId);

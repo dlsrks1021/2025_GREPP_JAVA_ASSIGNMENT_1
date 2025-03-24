@@ -1,6 +1,8 @@
 package controller;
 
 import framework.Session;
+import framework.annotation.GradeFilter;
+import model.Grade;
 import service.BoardService;
 import exception.NoSuchBoardException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class PostController {
     private final BoardService boardService;
     private final Scanner scanner;
 
+    @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/posts/add")
     public void add(@RequestParam("boardId") long boardId, Session session) {
         if (!boardService.isBoardExist(boardId)) {
@@ -37,12 +40,14 @@ public class PostController {
         postService.writePost(boardId, postTitle, postContent, author);
     }
 
+    @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/posts/remove")
     public void remove(@RequestParam("postId") long postId) {
         Post deletedPost = postService.deletePost(postId);
         System.out.println(deletedPost.getPostTitle() + " 게시글이 삭제되었습니다.");
     }
 
+    @GradeFilter({Grade.GENERAL, Grade.ADMIN})
     @GetMapping("/posts/edit")
     public void edit(@RequestParam("postId") long postId) {
         if (!postService.isPostExist(postId)) {
